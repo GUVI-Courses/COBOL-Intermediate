@@ -1,0 +1,44 @@
+000100 IDENTIFICATION DIVISION.                                         00010000
+000200 PROGRAM-ID. DEMO020.                                             00020006
+000300*  DEMO TO SHOW FILE OPERATIONS - READ                            00030001
+000400 ENVIRONMENT DIVISION.                                            00040000
+000500 INPUT-OUTPUT SECTION.                                            00050000
+000600 FILE-CONTROL.                                                    00060000
+000700     SELECT EMP-FILE ASSIGN TO EMP                                00070000
+000800        ORGANIZATION IS SEQUENTIAL                                00080003
+000900        FILE STATUS  IS WS-FILE-STATUS                            00090004
+001000        ACCESS IS SEQUENTIAL.                                     00100003
+001100 DATA DIVISION.                                                   00110000
+001200 FILE SECTION.                                                    00120000
+001300 FD EMP-FILE RECORD CONTAINS 80 CHARACTERS RECORDING MODE F.      00130000
+001400 01 EMP-RECORD.                                                   00140000
+001500    05 EMP-NUM      PIC 9(3)  VALUE ZEROS.                        00150000
+001600    05 EMP-NAME     PIC X(20) VALUE SPACES.                       00160000
+001700    05 EMP-LOC      PIC X(03) VALUE SPACES.                       00170000
+001800    05 FILLER       PIC X(54) VALUE SPACES.                       00180001
+001900 WORKING-STORAGE SECTION.                                         00190000
+002000 01  WS-VALRBLES.                                                 00200000
+002100     05  WS-PARM-VALUE PIC X(5) VALUE SPACES.                     00210000
+002200     05 WS-FILE-STATUS PIC 9(2) VALUE ZEROS.                      00220005
+002300 01 WS-EMP-RECORD      PIC X(80) VALUE SPACES.                    00230001
+002400 PROCEDURE DIVISION.                                              00240002
+002500     PERFORM OPEN-PARA.                                           00250001
+002600     PERFORM READ-PARA.                                           00260001
+002700     PERFORM CLOSE-PARA.                                          00270001
+002800     STOP RUN.                                                    00280001
+002900 OPEN-PARA.                                                       00290001
+003000     OPEN INPUT EMP-FILE.                                         00300001
+003100     IF WS-FILE-STATUS NOT EQUAL 0                                00310008
+003200        DISPLAY 'FILE OPEN FAILED ' WS-FILE-STATUS                00320009
+003300     END-IF.                                                      00330008
+003400 READ-PARA.                                                       00340001
+003500     READ EMP-FILE INTO WS-EMP-RECORD                             00350001
+003600        AT END DISPLAY 'END OF FILE'                              00360001
+003700        NOT AT END DISPLAY 'RECORD DETAILS:' WS-EMP-RECORD        00370001
+003800     END-READ.                                                    00380001
+003900 CLOSE-PARA.                                                      00390001
+004000     CLOSE EMP-FILE.                                              00400001
+004100     IF WS-FILE-STATUS NOT EQUAL 0                                00410009
+004200        DISPLAY 'FILE CLOSE FAILED'                               00420009
+004300     END-IF.                                                      00430009
+

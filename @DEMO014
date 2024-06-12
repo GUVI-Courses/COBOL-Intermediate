@@ -1,0 +1,62 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. DEMO014.
+      *  DEMO ON - UNSTRING VERB
+      *
+      *  UNSTRING WS-STRING DELIMITED BY WS-SPACE
+      *         INTO
+      *         WS-VAR2
+      *         WS-VAR3
+      *    WITH POINTER WS-COUNT
+      *    ON OVERFLOW         PERFORM STRING-UNSUCCESS-PARA
+      *    NOT ON OVERFLOW     PERFORM STRING-SUCCESS-PARA
+      * END-STRING.
+      *
+       DATA DIVISION.
+       FILE SECTION.
+       WORKING-STORAGE SECTION.
+       01  WS-VARIABES.
+           05 WS-STRING       PIC X(10).
+           05 WS-C1           PIC 9(3).
+           05 WS-C2           PIC 9(3).
+           05 WS-C3           PIC 9(3).
+           05 WS-C4           PIC 9(3).
+           05 WS-C5           PIC 9(3).
+           05 WS-COUNT        PIC 9(3) VALUE 1.
+           05 WS-TOTAL-CHARS-MOVED PIC 9(3) VALUE 1.
+           05 WS-SPACE        PIC X(1) VALUE ' '.
+           05 WS-SEMICOLON    PIC X(1) VALUE ';'.
+           05 WS-SYMBOL       PIC X(1) VALUE '~'.
+           05 WS-VAR1         PIC X(20).
+           05 WS-VAR2         PIC X(20).
+           05 WS-VAR3         PIC X(20).
+           05 WS-VAR4         PIC X(20).
+           05 WS-VAR5         PIC X(90).
+       PROCEDURE DIVISION.
+           PERFORM ACCEPT-PARA.
+           PERFORM STRING-PARA.
+           STOP RUN.
+       ACCEPT-PARA.
+           ACCEPT WS-STRING.
+       STRING-PARA.
+           UNSTRING WS-STRING DELIMITED BY WS-SYMBOL
+                  INTO
+                  WS-VAR1 COUNT IN WS-C1
+                  WS-VAR2 COUNT IN WS-C2
+                  WS-VAR3 COUNT IN WS-C3
+                  WS-VAR4 COUNT IN WS-C4
+******            WS-VAR5 COUNT IN WS-C5
+                  WITH POINTER WS-COUNT
+                  ON OVERFLOW PERFORM BAD-UNSTRING-PARA
+                  NOT ON OVERFLOW PERFORM UNSTRING-SUCCESS-PARA
+           END-UNSTRING.
+
+       UNSTRING-SUCCESS-PARA.
+           DISPLAY 'UNSTRING SUCCESS'.
+           DISPLAY ' '.
+           DISPLAY 'VARIABLE 1 IS :' WS-VAR1 ' ' WS-C1
+           DISPLAY 'VARIABLE 2 IS :' WS-VAR2 ' ' WS-C2
+           DISPLAY 'VARIABLE 3 IS :' WS-VAR3 ' ' WS-C3
+           DISPLAY 'VARIABLE 4 IS :' WS-VAR4 ' ' WS-C4.
+       BAD-UNSTRING-PARA.
+           DISPLAY 'BAD UNSTRING, OVERFLOW'.
+

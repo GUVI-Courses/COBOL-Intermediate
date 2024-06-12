@@ -1,0 +1,48 @@
+000100 IDENTIFICATION DIVISION.                                         00010001
+000200 PROGRAM-ID. DEMO024.                                             00020002
+000300*  DEMO TO CALL A COBOL PGM                                       00030016
+000400 ENVIRONMENT DIVISION.                                            00040001
+000500 INPUT-OUTPUT SECTION.                                            00050001
+000600 FILE-CONTROL.                                                    00060001
+000700     SELECT EMP-FILE ASSIGN TO EMP                                00070001
+000800        ORGANIZATION IS SEQUENTIAL                                00080001
+000900        FILE STATUS  IS WS-FILE-ST                                00090004
+001000        ACCESS IS SEQUENTIAL.                                     00100001
+001100 DATA DIVISION.                                                   00110001
+001200 FILE SECTION.                                                    00120001
+001300 FD EMP-FILE RECORD CONTAINS 80 CHARACTERS RECORDING MODE F.      00130001
+001400 01 EMP-RECORD.                                                   00140001
+001500    05 EMP-NUM      PIC 9(3)  VALUE ZEROS.                        00150001
+001600    05 EMP-NAME     PIC X(20) VALUE SPACES.                       00160001
+001700    05 EMP-LOC      PIC X(03) VALUE SPACES.                       00170001
+001800    05 EMP-SAL      PIC 9(05) VALUE ZEROS.                        00180014
+001900    05 FILLER       PIC X(49) VALUE SPACES.                       00190014
+002000 WORKING-STORAGE SECTION.                                         00200001
+002100 01  WS-VARIABLES.                                                00210007
+002200     05  WS-PARM-VA PIC X(5) VALUE SPACES.                        00220004
+002300     05  WS-FILE-ST PIC 9(2) VALUE ZEROS.                         00230004
+002400     05  WS-SAL     PIC 9(5) VALUE ZEROS.                         00240013
+002500     05  WS-PGM-SAL PIC X(6) VALUE 'SALARY'.                      00250006
+002600     05  WS-EOF-SWITCH  PIC X(1) VALUE SPACES.                    00260018
+002700 01 WS-EMP-RECORD   PIC X(80) VALUE SPACES.                       00270004
+002800 PROCEDURE DIVISION.                                              00280001
+002900     PERFORM OPEN-PARA.                                           00290001
+003000     PERFORM READ-PARA UNTIL WS-EOF-SWITCH = 'Y'.                 00300018
+003100     PERFORM CLOSE-PARA.                                          00310001
+003200     STOP RUN.                                                    00320001
+003300 OPEN-PARA.                                                       00330001
+003400     OPEN I-O   EMP-FILE.                                         00340020
+003500 READ-PARA.                                                       00350001
+003600     READ EMP-FILE INTO WS-EMP-RECORD                             00360001
+003700        AT END MOVE 'Y' TO WS-EOF-SWITCH                          00370018
+003800        NOT AT END PERFORM PROCESS-PARA                           00380002
+003900     END-READ.                                                    00390001
+004000 CLOSE-PARA.                                                      00400001
+004100     CLOSE EMP-FILE.                                              00410001
+004200 PROCESS-PARA.                                                    00420002
+004300     DISPLAY EMP-RECORD                                           00430007
+004400     DISPLAY 'CALLING PGM - EMP-LOC:' EMP-LOC                     00440021
+004500     CALL WS-PGM-SAL USING EMP-RECORD.                            00450014
+004600     DISPLAY 'CALLING PGM - EMP-SAL:' EMP-SAL.                    00460021
+004700     REWRITE EMP-RECORD.                                          00470017
+

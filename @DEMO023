@@ -1,0 +1,43 @@
+000100 IDENTIFICATION DIVISION.                                         00010000
+000200 PROGRAM-ID. DEMO023.                                             00020003
+000300*  DEMO TO SHOW FILE OPERATIONS - REWRITE                         00030000
+000400 ENVIRONMENT DIVISION.                                            00040000
+000500 INPUT-OUTPUT SECTION.                                            00050000
+000600 FILE-CONTROL.                                                    00060000
+000700     SELECT EMP-FILE ASSIGN TO EMP                                00070000
+000800        ORGANIZATION IS SEQUENTIAL                                00080000
+000900        FILE STATUS  IS WS-FILE-STATUS                            00090000
+001000        ACCESS IS SEQUENTIAL.                                     00100000
+001100 DATA DIVISION.                                                   00110000
+001200 FILE SECTION.                                                    00120000
+001300 FD EMP-FILE RECORD CONTAINS 80 CHARACTERS RECORDING MODE F.      00130000
+001400 01 EMP-RECORD.                                                   00140000
+001500    05 EMP-NUM      PIC 9(3)  VALUE ZEROS.                        00150000
+001600    05 EMP-NAME     PIC X(20) VALUE SPACES.                       00160000
+001700    05 EMP-LOC      PIC X(03) VALUE SPACES.                       00170000
+001800    05 FILLER       PIC X(54) VALUE SPACES.                       00180000
+001900 WORKING-STORAGE SECTION.                                         00190000
+002000 01  WS-VARIABES.                                                 00200000
+002100     05 WS-EMP-RECORD  PIC X(80) VALUE SPACES.                    00210000
+002200     05 WS-EOF-SWITCH  PIC X(1) VALUE SPACES.                     00220000
+002300     05 WS-FILE-STATUS PIC 9(2) VALUE ZEROS.                      00230000
+002400 PROCEDURE DIVISION.                                              00240000
+002500     PERFORM OPEN-PARA.                                           00250000
+002600     PERFORM READ-PARA UNTIL WS-EOF-SWITCH = 'Y'.                 00260000
+002700     PERFORM CLOSE-PARA.                                          00270000
+002800     STOP RUN.                                                    00280000
+002900 OPEN-PARA.                                                       00290000
+003000     OPEN I-O  EMP-FILE.                                          00300001
+003100 READ-PARA.                                                       00310000
+003200     READ EMP-FILE                                                00320004
+003300        AT END MOVE 'Y' TO WS-EOF-SWITCH                          00330000
+003400        NOT AT END PERFORM PROCESS-PARA                           00340000
+003500     END-READ.                                                    00350000
+003600 PROCESS-PARA.                                                    00360000
+003700     IF EMP-NAME = 'KRANTHI KUMAR'                                00370001
+003800        MOVE 'CHN'  TO EMP-LOC                                    00380001
+003900     END-IF.                                                      00390001
+004000     REWRITE EMP-RECORD.                                          00400002
+004100 CLOSE-PARA.                                                      00410000
+004200     CLOSE EMP-FILE.                                              00420000
+

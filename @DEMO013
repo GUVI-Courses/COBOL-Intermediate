@@ -1,0 +1,62 @@
+       IDENTIFICATION DIVISION.                                         00010000
+       PROGRAM-ID. DEMO013.                                             00020028
+      *  DEMO ON - STRING VERB                                          00030000
+      *                                                                 00031000
+      *  STRING WS-VAR1 DELIMITED BY SPACE                              00032000
+      *         WS-VAR2 DELIMITED BY SIZE                               00033000
+      *         WS-VAR3 DELIMITED BY ';'                                00033100
+      *    INTO WS-FINAL-STRING                                         00034000
+      *    WITH POINTER WS-COUNT                                        00035000
+      *    ON OVERFLOW         PERFORM STRING-UNSUCCESS-PARA            00036030
+      *    NOT ON OVERFLOW     PERFORM STRING-SUCCESS-PARA              00037000
+      * END-STRING.                                                     00038000
+      *                                                                 00039000
+       DATA DIVISION.                                                   00041000
+       FILE SECTION.                                                    00050000
+       WORKING-STORAGE SECTION.                                         00060000
+       01  WS-VARIABES.                                                 00070000
+           05 WS-FINAL-STRING PIC X(15).                                00080030
+           05 WS-COUNT        PIC 9(3) VALUE 1.                         00090015
+           05 WS-SPACE        PIC X(1) VALUE ' '.                       00090116
+           05 WS-SEMICOLON    PIC X(1) VALUE ';'.                       00090216
+           05 WS-PERIOD       PIC X(1) VALUE '.'.                       00090324
+           05 WS-EXCL         PIC X(1) VALUE '!'.                       00090427
+           05 WS-VAR1         PIC X(20) VALUE SPACES.                   00090527
+           05 WS-VAR2         PIC X(20) VALUE SPACES.                   00090627
+           05 WS-VAR3         PIC X(20) VALUE SPACES.                   00090727
+           05 WS-VAR4         PIC X(08) VALUE SPACES.                   00090827
+       PROCEDURE DIVISION.                                              00110000
+           PERFORM ACCEPT-PARA.                                         00120009
+           PERFORM STRING-PARA.                                         00130000
+           STOP RUN.                                                    00150000
+       ACCEPT-PARA.                                                     00160000
+           ACCEPT WS-VAR1.                                              00160120
+           ACCEPT WS-VAR2.                                              00160220
+           ACCEPT WS-VAR3.                                              00160320
+           ACCEPT WS-VAR4.                                              00160420
+       STRING-PARA.                                                     00161120
+           STRING WS-VAR1 DELIMITED BY WS-EXCL                          00161227
+                  WS-VAR2 DELIMITED BY WS-SPACE                         00162016
+                  WS-VAR3 DELIMITED BY WS-SEMICOLON                     00163016
+                  WS-VAR4 DELIMITED BY SIZE                             00163127
+                  INTO WS-FINAL-STRING                                  00164000
+                  WITH POINTER WS-COUNT                                 00165000
+                  ON OVERFLOW PERFORM BAD-STRING-PARA                   00166020
+                  NOT ON OVERFLOW PERFORM STRING-SUCCESS-PARA           00167011
+           END-STRING.                                                  00168000
+                                                                        00169000
+       STRING-SUCCESS-PARA.                                             00220000
+           DISPLAY WS-VAR1                                              00221026
+           DISPLAY WS-VAR2                                              00222026
+           DISPLAY WS-VAR3                                              00223026
+           DISPLAY WS-VAR4                                              00224026
+           DISPLAY 'STRING CONCATENATION SUCCESS'.                      00230000
+           DISPLAY ' '.                                                 00231021
+           DISPLAY 'CONCATENATED STRING IS BELOW : '                    00240001
+           DISPLAY ' '.                                                 00240121
+           DISPLAY WS-FINAL-STRING.                                     00241001
+           DISPLAY ' '.                                                 00241121
+           DISPLAY 'POINTER IS LOCATED AT :' WS-COUNT.                  00242029
+       BAD-STRING-PARA.                                                 00250000
+           DISPLAY 'BAD STRING CONCATENATION, OVERFLOW'.                00260000
+

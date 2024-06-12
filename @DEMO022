@@ -1,0 +1,71 @@
+000100 IDENTIFICATION DIVISION.                                         00010000
+000200 PROGRAM-ID. DEMO022.                                             00020013
+000300*  DEMO TO SHOW FILE OPERATIONS - WRITE                           00030000
+000400 ENVIRONMENT DIVISION.                                            00040000
+000500 INPUT-OUTPUT SECTION.                                            00050000
+000600 FILE-CONTROL.                                                    00060000
+000700     SELECT EMP-FILE ASSIGN TO EMP                                00070000
+000800        ORGANIZATION IS SEQUENTIAL                                00080000
+000900        FILE STATUS  IS WS-FILE-STAT1                             00090000
+001000        ACCESS IS SEQUENTIAL.                                     00100000
+001100     SELECT OUT-FILE ASSIGN TO OUT                                00110000
+001200        ORGANIZATION IS SEQUENTIAL                                00120000
+001300        FILE STATUS  IS WS-FILE-STAT2                             00130000
+001400        ACCESS IS SEQUENTIAL.                                     00140000
+001500 DATA DIVISION.                                                   00150000
+001600 FILE SECTION.                                                    00160000
+001700 FD EMP-FILE RECORD CONTAINS 80 CHARACTERS RECORDING MODE F.      00170007
+001800 01 EMP-RECORD.                                                   00180000
+001900    05 EMP-NUM      PIC 9(3)  VALUE ZEROS.                        00190000
+002000    05 EMP-NAME     PIC X(20) VALUE SPACES.                       00200000
+002100    05 EMP-LOC      PIC X(03) VALUE SPACES.                       00210000
+002200    05 FILLER       PIC X(54) VALUE SPACES.                       00220000
+002300 FD OUT-FILE RECORD CONTAINS 80 CHARACTERS RECORDING MODE F.      00230007
+002400 01 OUT-RECORD.                                                   00240000
+002500    05 OUT-NAME     PIC X(20) VALUE SPACES.                       00250000
+002600    05 OUT-LOC      PIC X(03) VALUE SPACES.                       00260000
+002700    05 FILLER       PIC X(57) VALUE SPACES.                       00270000
+002800 WORKING-STORAGE SECTION.                                         00280000
+002900 01  WS-VARIABES.                                                 00290000
+003000     05 WS-EOF-SWITCH  PIC X(1) VALUE SPACES.                     00300000
+003100     05 WS-FILE-STAT1  PIC 9(2) VALUE ZEROS.                      00310000
+003200     05 WS-FILE-STAT2  PIC 9(2) VALUE ZEROS.                      00320000
+003300 PROCEDURE DIVISION.                                              00330000
+003400     PERFORM OPEN-PARA.                                           00340000
+003500     PERFORM READ-PARA UNTIL WS-EOF-SWITCH = 'Y'.                 00350000
+003600     PERFORM CLOSE-PARA.                                          00360000
+003700     STOP RUN.                                                    00370000
+003800 OPEN-PARA.                                                       00380000
+003900     OPEN INPUT  EMP-FILE.                                        00390000
+004000     IF WS-FILE-STAT1  NOT EQUAL 0                                00400000
+004100        DISPLAY 'INPUT FILE OPEN FAILED:' WS-FILE-STAT1           00410000
+004200     END-IF.                                                      00420000
+004300*    OPEN OUTPUT OUT-FILE.                                        00430014
+004400     OPEN EXTEND OUT-FILE.                                        00440014
+004500     IF WS-FILE-STAT2  NOT EQUAL 0                                00450000
+004600        DISPLAY 'OUTPUT FILE OPEN FAILED:' WS-FILE-STAT2          00460000
+004700     END-IF.                                                      00470000
+004800 READ-PARA.                                                       00480000
+004900     READ EMP-FILE                                                00490000
+005000        AT END MOVE 'Y' TO WS-EOF-SWITCH                          00500000
+005100        NOT AT END PERFORM PROCESS-PARA                           00510001
+005200     END-READ.                                                    00520000
+005300 PROCESS-PARA.                                                    00530000
+005400        MOVE SPACES TO OUT-RECORD,                                00540000
+005500        DISPLAY 'EMP-RECORD:' EMP-RECORD.                         00550006
+005600        MOVE EMP-NAME TO OUT-NAME.                                00560008
+005700        MOVE EMP-LOC  TO OUT-LOC.                                 00570008
+005800        WRITE OUT-RECORD.                                         00580000
+005900        IF WS-FILE-STAT1  NOT EQUAL 0                             00590011
+006000           DISPLAY 'FILE WRITE STATUS:' WS-FILE-STAT1             00600012
+006100        END-IF.                                                   00610011
+006200 CLOSE-PARA.                                                      00620000
+006300     CLOSE EMP-FILE.                                              00630000
+006400     IF WS-FILE-STAT1  NOT EQUAL 0                                00640000
+006500        DISPLAY 'INPUT FILE CLOSE FAILED:' WS-FILE-STAT1          00650000
+006600     END-IF.                                                      00660000
+006700     CLOSE OUT-FILE.                                              00670000
+006800     IF WS-FILE-STAT2  NOT EQUAL 0                                00680000
+006900        DISPLAY 'OUTPUT FILE CLOSE FAILED:' WS-FILE-STAT2         00690000
+007000     END-IF.                                                      00700000
+

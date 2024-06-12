@@ -1,0 +1,53 @@
+000100 IDENTIFICATION DIVISION.                                         00010001
+000200 PROGRAM-ID. DEMO016.                                             00020009
+000300*  DEMO ON - COBOL INTRINSIC FUNCTIONS                            00030001
+000310*  NUMVAL,MIN,MAX,LOWER-CASE,UPPER-CASE,WHEN-COMPILED             00031001
+000320*  LENGTH, REVERSE,TRIM, TRIM LEADING, TRIM TRAILING              00032007
+000400 DATA DIVISION.                                                   00040001
+000500 FILE SECTION.                                                    00050001
+000600 WORKING-STORAGE SECTION.                                         00060001
+000700 01  WS-VARIABES.                                                 00070001
+000800     05 WS-EMP         PIC X(80) VALUE ' KRANTHI KUMAR B '.       00080006
+000900     05 WS-LENGTH      PIC 9(3) VALUE ZEROS.                      00090003
+001000     05 WS-X           PIC 9(2) VALUE ZEROS.                      00100001
+001100     05 WS-NUM1        PIC 9(2) VALUE 9.                          00110001
+001110     05 WS-NUM2        PIC 9(2) VALUE 6.                          00111001
+001120     05 WS-NUM3        PIC 9(2) VALUE 12.                         00112001
+001130     05 WS-MIN         PIC 9(2) VALUE ZEROS.                      00113002
+001140     05 WS-MAX         PIC 9(2) VALUE ZEROS.                      00114003
+001200 PROCEDURE DIVISION.                                              00120001
+001210     DISPLAY '*** MIN FUNCTION ****'.                             00121001
+001300     COMPUTE WS-MIN = FUNCTION MIN(WS-NUM1 WS-NUM2 WS-NUM3).      00130002
+001301     DISPLAY 'WS-MIN:' WS-MIN.                                    00130102
+001310     DISPLAY '*** MAX FUNCTION ****'.                             00131001
+001400     COMPUTE WS-MAX = FUNCTION MAX(WS-NUM1 WS-NUM2 WS-NUM3).      00140002
+001401     DISPLAY 'WS-MAX:' WS-MAX.                                    00140102
+001410     DISPLAY '*** LOWER FUNCTION ****'.                           00141001
+001500     DISPLAY FUNCTION LOWER-CASE('HELLO WORLD').                  00150001
+001510     DISPLAY '*** UPPER FUNCTION ****'.                           00151001
+001600     DISPLAY FUNCTION UPPER-CASE('hello world').                  00160001
+001610     DISPLAY '*** WHEN-COMPILED FUNCTION ***'.                    00161001
+001700     DISPLAY FUNCTION WHEN-COMPILED.                              00170001
+001701     DISPLAY '*** LENGTH OF  HELLO WORLD ***'.                    00170101
+001710     COMPUTE WS-LENGTH = FUNCTION LENGTH('HELLO WORLD')           00171004
+001711     DISPLAY 'WS-LENGTH IS:' WS-LENGTH                            00171103
+001712     DISPLAY '*** LENGTH OF  WS-EMP WITH VALUE***'.               00171205
+001720     COMPUTE WS-LENGTH = FUNCTION LENGTH(WS-EMP)                  00172005
+001721     DISPLAY 'WS-LENGTH IS:' WS-LENGTH                            00172103
+001730     DISPLAY '*** REVERSE OF  WS-EMP **'.                         00173005
+001740     DISPLAY FUNCTION REVERSE(WS-EMP)                             00174005
+001750     DISPLAY '*** REVERSE OF  HELLO WORLD ***'.                   00175001
+001760     DISPLAY FUNCTION REVERSE('HELLO WORLD').                     00176006
+001761     DISPLAY '*** ACTUAL LENGTH OF CONTENTS OF WS-EMP VARIABLE:'. 00176106
+001770     COMPUTE WS-LENGTH = FUNCTION LENGTH(FUNCTION TRIM(WS-EMP)).  00177006
+001780     DISPLAY 'WS-LENGTH IS:' WS-LENGTH.                           00178006
+001790     DISPLAY '*** ACTUAL LENGTH OF OF WS-EMP WITH LEFT TRIM:'.    00179006
+001800     COMPUTE WS-LENGTH = FUNCTION LENGTH                          00180006
+001801             (FUNCTION TRIM(WS-EMP LEADING)).                     00180106
+001810     DISPLAY 'WS-LENGTH IS:' WS-LENGTH.                           00181006
+001820     DISPLAY '*** ACTUAL LENGTH OF OF WS-EMP WITH RIGHT TRIM:'.   00182006
+001830     COMPUTE WS-LENGTH = FUNCTION LENGTH                          00183006
+001840             (FUNCTION TRIM(WS-EMP TRAILING)).                    00184006
+001850     DISPLAY 'WS-LENGTH IS:' WS-LENGTH.                           00185006
+001900     STOP RUN.                                                    00190001
+
